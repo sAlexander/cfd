@@ -2,5 +2,4 @@
 src/*.o
 src/*.mod
 *a.out
-src/main
-src/test
+src/cfd
