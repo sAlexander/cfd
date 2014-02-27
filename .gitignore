@@ -1,0 +1,6 @@
+# Compiler objects, modules, and executables
+src/*.o
+src/*.mod
+*a.out
+src/main
+src/test
