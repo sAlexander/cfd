@@ -2,15 +2,21 @@ program cfd
 
 use parameters
 use diff
+use save
 implicit none
 
 integer,parameter :: seed = 86456
 real,parameter :: pi = 3.14159
 integer :: ix, iy, it, ii
 
+integer :: xind, yind, r
+real :: ulocal, udisk, aforce
+
 real :: gamma
 
 real, allocatable,dimension(:,:) :: u,v,p,ua,va,ud,vd,uvx,uvy,u2x,v2y,rhs
+
+call save_parameters()
 
 allocate( u(nnx,nny), &
           v(nnx,nny), &
@@ -89,6 +95,19 @@ do it=1,nts
     vd = cshift(p,shift=-1,dim=2); call ddy(vd,h)
     u = u - ud
     v = v - vd
+
+    !! Actuator Disk
+
+    xind = nnx/2
+    yind = nny/2
+    r = nnx/32
+    ulocal = sum(u(xind,(yind-r):(yind+r)))/(2*r+1);
+    udisk = udisk + 0.5*(ulocal-udisk)
+    aforce = (-1.0/2.0)*(4.0/3.0)*(1.0-1.0/4.0)*udisk**2/h;
+    u(xind,(yind-r):(yind+r)) = u(xind,(yind-r):(yind+r)) + dt*aforce
+    if (mod(it,10) == 0) then
+        call save_vel(it,u,v)
+    end if 
 
 end do
 

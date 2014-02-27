@@ -8,8 +8,9 @@ DIR =
 
 PROGRAMS = cfd
 
-cfd: diff.o parameters.o utils.o
+cfd: diff.o parameters.o utils.o save.o
 diff.o: parameters.o
+save.o: parameters.o
 
 # ======================================================================
 # And now the general rules, these should not require modification
