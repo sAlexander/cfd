@@ -3,14 +3,13 @@ program cfd
 use parameters
 use diff
 use save
+use actuator
 implicit none
 
 integer,parameter :: seed = 86456
 real,parameter :: pi = 3.14159
 integer :: ix, iy, it, ii
 
-integer :: xind, yind, r
-real :: ulocal, udisk, aforce
 
 real :: gamma
 
@@ -50,6 +49,7 @@ call ddy(u,1.0)
 call ddx(v,1.0)
 u = u + uvel
 p = p*0.0
+call initialize_actuator(10)
 
 do it=1,nts
 
@@ -96,15 +96,9 @@ do it=1,nts
     u = u - ud
     v = v - vd
 
-    !! Actuator Disk
+    call update_actuator(u)
+    call apply_actuator(u,dt,h)
 
-    xind = nnx/2
-    yind = nny/2
-    r = nnx/32
-    ulocal = sum(u(xind,(yind-r):(yind+r)))/(2*r+1);
-    udisk = udisk + 0.5*(ulocal-udisk)
-    aforce = (-1.0/2.0)*(4.0/3.0)*(1.0-1.0/4.0)*udisk**2/h;
-    u(xind,(yind-r):(yind+r)) = u(xind,(yind-r):(yind+r)) + dt*aforce
     if (mod(it,10) == 0) then
         call save_vel(it,u,v)
     end if 
