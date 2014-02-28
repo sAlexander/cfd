@@ -43,7 +43,7 @@ module actuator
             ix = xlocs(idisk)
             iy = ylocs(idisk)
             ulocal = sum(u(ix,(iy-r):(iy+r)))/(2*r+1)
-            speed(idisk) = speed(idisk) + alpha*(speed(idisk)-ulocal)
+            speed(idisk) = speed(idisk) + alpha*(ulocal - speed(idisk))
         end do update_velocity
 
     end subroutine
