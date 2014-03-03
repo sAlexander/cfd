@@ -3,15 +3,16 @@ FC = mpif90
 # flags for debugging or for maximum performance, comment as necessary
 FCFLAGS = -g -fbounds-check
 # flags forall (e.g. look for system .mod files, required in gfortran)
-FCFLAGS += -I/usr/include
+FCFLAGS += -I/usr/include -fopenmp
 DIR = 
 
 PROGRAMS = cfd
 
-cfd: diff.o parameters.o utils.o save.o actuator.o
+cfd: diff.o parameters.o utils.o save.o actuator.o boundary.o
 diff.o: parameters.o
 save.o: parameters.o
 actuator.o: parameters.o
+boundary.o: parameters.o
 
 # ======================================================================
 # And now the general rules, these should not require modification
