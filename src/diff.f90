@@ -37,13 +37,16 @@ module diff
         real, dimension(:,:), intent(in) :: p
         real, intent(in) :: h
         real, dimension(size(p,1),size(p,2)) :: myiter
+        integer :: nnx
 
-        !$OMP WORKSHARE
+        nnx = size(p,1)
+
         myiter = (cshift(p,shift=+1, dim=2) &
              +cshift(p,shift=-1,dim=2) &
              +cshift(p,shift=+1,dim=1) &
              +cshift(p,shift=-1,dim=1))
-        !$OMP END WORKSHARE
+        myiter(1,:) = myiter(1,:)-p(nnx,:)
+        myiter(nnx,:) = myiter(nnx,:)-p(1,:)
     end function
 
     subroutine xavg(u)
