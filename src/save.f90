@@ -19,7 +19,8 @@ module save
         write(uid,'(A,I4,A)') '"nny": ', nny, ','
         write(uid,'(A,f11.8,A)') '"lx": ', lx, ','
         write(uid,'(A,f11.8,A)') '"ly": ', ly, ','
-        write(uid,'(A,f11.8,A)') '"h": ', h, ','
+        write(uid,'(A,f11.8,A)') '"hx": ', hx, ','
+        write(uid,'(A,f11.8,A)') '"hy": ', hy, ','
 
         write(uid,'(A,f11.8,A)') '"uvel": ', uvel, ','
 
@@ -34,6 +35,8 @@ module save
 
         write(uid,'(A)') '}'
 
+        close(uid)
+
 
     end subroutine
 
@@ -43,15 +46,35 @@ module save
         real, dimension(:,:), intent(in) :: v
         integer, parameter :: sizeofreal=4
         integer :: uid
-        character*15 :: filename
+        logical :: exist
+        character*16 :: filename
 
-        WRITE(filename,'(A,I0.4,A)') './data/',it,'.raw'
-
+        !! Save the full variables
+        WRITE(filename,'(A,I0.5,A)') './data/',it,'.raw'
         open(newunit=uid,file=filename, form='unformatted', &
              access='direct',recl=nnx*nny*sizeofreal*2)
-
         write(uid,rec=1) u,v
         close(uid)
+    end subroutine
+
+    subroutine save_pow(it,pow)
+        integer, intent(in) :: it
+        real, intent(in) :: pow
+        integer :: uid
+        logical :: exist
+        character*16 :: filename
+
+        !! Save the power output
+        WRITE(filename,'(A)') './data/power.txt'
+        inquire(file=filename, exist=exist)
+        if (exist) then
+            open(newunit=uid,file=filename, status="old", position="append", action="write")
+        else
+            open(newunit=uid,file=filename, status="new", action="write")
+        end if
+        write(uid,*) pow
+        close(uid)
+
     end subroutine
 
 
