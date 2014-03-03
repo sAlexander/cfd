@@ -11,6 +11,13 @@ def printit(filename,plotname):
     plt.savefig(plotname)
     plt.close()
 
+def trackhist(filename,hist):
+    res = np.fromfile(filename,dtype='f4',count=-1)
+    var = np.reshape(res,(2,pars['nnx'],pars['nny']))
+    hist.append(np.mean(var[0,:,:]))
+    return hist
+
+
 if __name__ == '__main__':
     basedir = './src/data'
     plotdir = os.path.join(basedir,'plots')
@@ -22,9 +29,13 @@ if __name__ == '__main__':
 
     filenames=  os.listdir(basedir)
     filenames.sort()
+    avgvel = []
     for i,filename in enumerate(filenames):
         print i
         path = os.path.join(basedir,filename)
-        plotpath = os.path.join(plotdir,'%04d.png' % i)
-        printit(path,plotpath)
+        plotpath = os.path.join(plotdir,'%05d.png' % i)
+        # printit(path,plotpath)
+        trackhist(path,avgvel)
+    plt.plot(avgvel)
+    plt.show()
 
