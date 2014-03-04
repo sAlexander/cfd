@@ -31,7 +31,7 @@ module actuator
             
             ! make sure it's within bounds
             xlocs(idisk) = min(xlocs(idisk),nnx)
-            xlocs(idisk) = max(xlocs(idisk),1)
+            xlocs(idisk) = max(xlocs(idisk),r)
             ylocs(idisk) = min(ylocs(idisk),nny-r-1)
             ylocs(idisk) = max(ylocs(idisk),r+1)
 
