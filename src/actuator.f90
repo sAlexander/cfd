@@ -1,5 +1,5 @@
 module actuator
-    use parameters, only: nnx, nny, ndisks, adisk_fname
+    use parameters
 
     implicit none
 
