@@ -24,7 +24,7 @@ module boundary
             if (lev == 1) then ! steady winds
                 yvel = 0.125*sin(pi*it*dt/tf*10)
                 do iy=1,nny
-                    u(1,iy) = 4.0
+                    u(1,iy) = uvel
                     v(1,iy) = yvel
                 end do
 
