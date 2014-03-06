@@ -10,9 +10,8 @@ module save
 
         integer :: uid
 
-        character*22 :: filename
-        filename = './data/parameters.json'
-        open(newunit=uid,file=filename)
+        character(*), parameter :: filename = 'parameters.json'
+        open(newunit=uid,file=write_dir//filename)
 
         write(uid,'(A)') '{'
 
@@ -24,13 +23,22 @@ module save
         write(uid,'(A,f11.8,A)') '"hy": ', hy, ','
 
         write(uid,'(A,f11.8,A)') '"uvel": ', uvel, ','
+        write(uid,'(A,f11.9,A)') '"dpg": ', dpg, ','
 
         write(uid,'(A,f11.8,A)') '"cfl": ', cfl, ','
         write(uid,'(A,f11.8,A)') '"dt": ', dt, ','
         write(uid,'(A,f11.8,A)') '"tf": ', tf, ','
         write(uid,'(A,I8,A)') '"nts": ', nts, ','
 
-        write(uid,'(A,I4)') '"niter": ', niter
+        write(uid,'(A,I4,A)') '"niter": ', niter, ','
+
+        write(uid,'(A,I4,A)') '"write_freq": ', write_freq, ','
+        write(uid,'(A,A,A)') '"write_dir": "', write_dir, '",'
+
+        write(uid,'(A,I4,A)') '"ndisks": ', ndisks, ','
+        write(uid,'(A,A,A)') '"adisk_fname": "', adisk_fname, '",'
+        write(uid,'(A,I4,A)') '"r": ', r, ','
+        write(uid,'(A,f11.8,A)') '"alpha": ', alpha
 
 
 
@@ -50,11 +58,11 @@ module save
         integer, parameter :: sizeofreal=4
         integer :: uid
         logical :: exist
-        character*16 :: filename
+        character*9 :: filename
 
         !! Save the full variables
-        WRITE(filename,'(A,I0.5,A)') './data/',it,'.raw'
-        open(newunit=uid,file=filename, form='unformatted', &
+        WRITE(filename,'(I0.5,A)') it,'.raw'
+        open(newunit=uid,file=write_dir//filename, form='unformatted', &
              access='direct',recl=nnx*nny*sizeofreal*2)
         write(uid,rec=1) u,v
         close(uid)
