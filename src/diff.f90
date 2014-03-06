@@ -4,24 +4,26 @@ module diff
     contains
 
     subroutine ddx(u,h)
+    ! take the forward derivative wrt x
+
         real, dimension(:,:), intent(inout) :: u
         real, intent(in) :: h
 
-            !$OMP WORKSHARE
-                u = (cshift(u,shift=1,dim=1) - u)/h
-            !$OMP END WORKSHARE
+        u = (cshift(u,shift=1,dim=1) - u)/h
     end subroutine
 
     subroutine ddy(u,h)
+    ! take the forward derivative wrt y
+
         real, dimension(:,:), intent(inout) :: u
         real, intent(in) :: h
 
-        !$OMP WORKSHARE
-            u = (cshift(u,shift=1,dim=2) - u)/h
-        !$OMP END WORKSHARE
+        u = (cshift(u,shift=1,dim=2) - u)/h
     end subroutine
 
     subroutine lap(u,h)
+    ! calculate the finite difference approximation to the laplacian
+
         real, dimension(:,:), intent(inout) :: u
         real, intent(in) :: h
 
@@ -34,6 +36,11 @@ module diff
     end subroutine
 
     function myiter(p,h)
+    ! calculate the iteration for the Poisson solver. Note that this is exactly
+    ! the same as the laplacian, but without the final -4*u term, and
+    ! non-periodic boundaries on the left and right (it uses Neumann BCs
+    ! instead)
+
         real, dimension(:,:), intent(in) :: p
         real, intent(in) :: h
         real, dimension(size(p,1),size(p,2)) :: myiter
@@ -50,12 +57,17 @@ module diff
     end function
 
     subroutine xavg(u)
+    ! calculate the forward average wrt x
+
         real, dimension(:,:), intent(inout) :: u
         u = (cshift(u,shift=1,dim=1) + u)/2
     end subroutine
 
     subroutine yavg(u)
+    ! calculate the forward averate wrt y
+
         real, dimension(:,:), intent(inout) :: u
+
         u = (cshift(u,shift=1,dim=2) + u)/2
     end subroutine
 

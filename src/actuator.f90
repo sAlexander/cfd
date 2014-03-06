@@ -3,17 +3,24 @@ module actuator
 
     implicit none
 
-    integer, parameter :: r = nnx/32
-    real, parameter :: alpha = 0.5
 
+    ! xlocs:  The x coordinate of the actuator disk
+    ! ylocs:  The y coordinate of the actuator disk
+    ! speed:  The exponentially averaged velocity at the disk
     integer, save, dimension(:), allocatable :: xlocs
     integer, save, dimension(:), allocatable :: ylocs
-    real, save, dimension(:), allocatable   :: speed
+    real,    save, dimension(:), allocatable :: speed
 
     contains
 
     subroutine initialize_actuator()
+    ! Initialize the actuator disk with the file located at adisk_fname (found
+    ! in the parameter file)
 
+
+        ! idisk:   counter for looping over disks
+        ! j:       temp variable for reading files
+        ! temp:    temp variable for holding each pair of coordinates
         integer :: idisk,j, uid
         real, dimension(2) :: temp
 
@@ -42,6 +49,11 @@ module actuator
     end subroutine
 
     subroutine update_actuator(u)
+    ! Use the velocity to update the speeds experienced at each actuator disk
+
+        ! u (in):   downstream velocity field
+        ! ulocal:   temp variable to store the local velocity at each disk
+        ! ix,iy,idisk: iteration variables
         real, intent(in), dimension(:,:) :: u
         real :: ulocal
         integer :: ix,iy,idisk
@@ -56,10 +68,20 @@ module actuator
     end subroutine
 
     subroutine apply_actuator(u,dt,h,pow)
+    ! Remove the appropriate energy from the u velocity field from the disk
+    ! power production, and return the resulting production
+
+        ! u(inout):  downstream velocity field
+        ! dt (in):   current time step
+        ! h (in):    the spacing in the direction of flow (ie hx)
+        ! pow (out): the power produced this timestep by the turbine. note that
+        !            it is a positive quantity, unlike the aforce
+        ! aforce:    force exerted on the fluid by the actuator disk. It should
+        !            always be negative
+        ! ix,iy,idisk: iteration variables
         real, intent(inout), dimension(:,:) :: u
         real, intent(in) :: dt, h
         real, intent(out) :: pow
-
         real :: aforce
         integer :: ix,iy,idisk
 

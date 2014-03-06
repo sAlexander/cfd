@@ -6,6 +6,7 @@ module save
     contains
 
     subroutine save_parameters()
+    ! Save all of the parameters as a JSON file
 
         integer :: uid
 
@@ -41,6 +42,8 @@ module save
     end subroutine
 
     subroutine save_vel(it,u,v)
+    ! Save the velocity raw binary files, u followed by v
+
         integer, intent(in) :: it
         real, dimension(:,:), intent(in) :: u
         real, dimension(:,:), intent(in) :: v
@@ -58,6 +61,8 @@ module save
     end subroutine
 
     subroutine save_pow(it,pow)
+    ! Save the power production for the timestep
+
         integer, intent(in) :: it
         real, intent(in) :: pow
         integer :: uid
