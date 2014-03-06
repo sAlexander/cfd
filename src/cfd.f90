@@ -1,4 +1,5 @@
 program cfd
+! Run the 2d cfd simulation
 
 use parameters
 use diff
@@ -11,8 +12,16 @@ integer,parameter :: seed = 86456
 integer :: ix, iy, it, ii
 
 
+! gamma: how much upwinding will we use?
+! pow:   temporary variable for power
 real :: gamma, pow
 
+! u,v:     velocities
+! ua,va:   velocity averages (temp)
+! ud,vd:   velocity derivatives (temp)
+! uvx, uvy,u2x,u2y: variables for the advective term in the NS equation
+! p:       pressure
+! rhs:     rhs for the pressure solver
 real, allocatable,dimension(:,:) :: u,v,p,ua,va,ud,vd,uvx,uvy,u2x,v2y,rhs
 
 call save_parameters()
@@ -51,9 +60,10 @@ u = u + uvel
 p = p*0.0
 call initialize_actuator()
 
-do it=1,nts
+time_step: do it=1,nts
 
     call apply_boundary(u,v,1,it)
+
     !! Calculate the uvx and uvy with upwinding
     gamma = min(1.2*dt*max(maxval(abs(u))/hx,maxval(abs(v))/hy),1.0);
     ua = u; call yavg(ua); ua = cshift(ua,shift=-1,dim=2);
@@ -84,33 +94,34 @@ do it=1,nts
     u = u - dt*(uvy+u2x)
     v = v - dt*(uvx+v2y)
 
-    !! Pressure
+    !! Iteratively solve for pressure
     call apply_boundary(u,v,1,it)
 
     ud = u; call ddx(ud,hx)
     vd = v; call ddy(vd,hy)
     rhs = ud + vd
-    do ii=1,niter
+    iterate_pressure: do ii=1,niter
         p = 0.25*(myiter(p,hm) - hx*hy*rhs)
-    end do
+    end do iterate_pressure
     ud = cshift(p,shift=-1,dim=1); call ddx(ud,hx)
     vd = cshift(p,shift=-1,dim=2); call ddy(vd,hy)
     u = u - ud
     v = v - vd
 
-    !! actuator disk
+    !! Apply actuator force
     call update_actuator(u)
     call apply_actuator(u,dt,hx,pow)
 
     !! driving pressure gradient
     u = u + dt*dpg
 
-    if (mod(it,10) == 0) then
+    !! Save the information if requested
+    if (mod(it,write_freq) == 0) then
         call save_vel(it,u,v)
         call save_pow(it,pow)
     end if 
 
-end do
+end do time_step
 
 
 
