@@ -14,7 +14,8 @@ integer :: ix, iy, it, ii
 
 ! gamma: how much upwinding will we use?
 ! pow:   temporary variable for power
-real :: gamma, pow
+! powtotal: a aggregator for power
+real :: gamma, pow, powtotal
 
 ! u,v:     velocities
 ! ua,va:   velocity averages (temp)
@@ -40,9 +41,6 @@ allocate( u(nnx,nny), &
           rhs(nnx,nny) &
 )
 
-!!
-print *, 'Time Step: ', dt
-
 ! create random initial pertubation
 call srand(seed)
 do ix=1,nnx
@@ -58,6 +56,7 @@ call ddy(u,1.0)
 call ddx(v,1.0)
 u = u + uvel
 p = p*0.0
+powtotal = 0
 call initialize_actuator()
 
 time_step: do it=1,nts
@@ -114,6 +113,7 @@ time_step: do it=1,nts
 
     !! driving pressure gradient
     u = u + dt*dpg
+    powtotal = powtotal + pow*dt
 
     !! Save the information if requested
     if (mod(it,write_freq) == 0) then
@@ -122,6 +122,8 @@ time_step: do it=1,nts
     end if 
 
 end do time_step
+
+print *, 'Total Power Produced: ', powtotal
 
 
 

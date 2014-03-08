@@ -25,8 +25,8 @@ module parameters
     integer, parameter :: niter = 50
 
     !! Saving the files
-    integer, parameter :: write_freq = 10
-    character(*), parameter :: write_dir = './data/' ! make sure this exists
+    integer, parameter :: write_freq = 10000000
+    character(*), parameter :: write_dir = './' ! make sure this exists
 
     !! Actuator disk setup
     integer, parameter :: ndisks = 20
