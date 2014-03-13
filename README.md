@@ -10,10 +10,10 @@ Running the code is as simple as:
 
 ```
 # get the repository
-git clone git@github.com:sAlexander/cfd.git
-cd cfd/src
+git clone https://github.com/sAlexander/cfd.git
 
 # compile all of the fortran
+cd cfd/src
 make
 
 # run the code
@@ -28,10 +28,10 @@ To run the script, the following will suffice:
 
 ```
 # get the repository
-git clone git@github.com:sAlexander/cfd.git
-cd cfd/src
+git clone https://github.com/sAlexander/cfd.git
 
 # compile all of the fortran
+cd cfd/src
 make
 
 # move back up to the root directory
