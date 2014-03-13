@@ -132,6 +132,11 @@ def start(A = None):
     """START: This is where the magic happens
     create a random layout, run a generation with random pertubations
     and take the best of the generation to create a new generation
+
+    Inputs:
+          A (optional) : Turbine layout, all turbine positions should be between
+                         0 and 1.
+
     """
 
     log('--------------------------------------')
