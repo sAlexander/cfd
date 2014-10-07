@@ -4,6 +4,10 @@
 The code solves the incompressible Euler equations. The code closely follows the derivation here:
 http://www-math.mit.edu/cse/codes/mit18086_navierstokes.pdf
 
+See an example image from the simulation here:
+
+![Image of Simulation](./docs/wakes.png)
+
 ## Running the code.
 
 Running the code is as simple as:
