@@ -6,8 +6,6 @@ FCFLAGS = -g -fbounds-check
 FCFLAGS += -I/usr/include
 DIR = 
 
-PROGRAMS = cfd
-
 cfd: diff.o parameters.o utils.o save.o actuator.o boundary.o
 diff.o: parameters.o
 save.o: parameters.o
@@ -35,11 +33,5 @@ boundary.o: parameters.o
 %.o: %.F
 	$(FC) $(FCFLAGS) -c $(DIR)$<
 
-# Utility targets
-.PHONY: clean veryclean
-
 clean:
 	rm -f *.o *.mod *.MOD main test output*.txt
-
-testall: test
-	mpirun -np 3 test
