@@ -1,9 +1,9 @@
 # The compiler
-FC = mpif90
+FC = gfortran
 # flags for debugging or for maximum performance, comment as necessary
 FCFLAGS = -g -fbounds-check
 # flags forall (e.g. look for system .mod files, required in gfortran)
-FCFLAGS += -I/usr/include -fopenmp
+FCFLAGS += -I/usr/include
 DIR = 
 
 PROGRAMS = cfd

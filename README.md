@@ -10,6 +10,8 @@ See an example image from the simulation below which approximates flow through a
 
 ## Running the code.
 
+Make sure that you've installed a fortran compiler -- by default, the make script expects for the `gfortran` compiler to be available. On a system like Ubuntu, it can be installed with `apt-get install gfortran`.
+
 Running the code is as simple as:
 
 ```
